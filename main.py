@@ -1,6 +1,7 @@
 from youtube_comments import YouTubeCommentsFetcher
 from sentiment_analyzer import SentimentAnalyzer
 from lyrics_generator import LyricsGenerator
+from audio_generator import AudioGenerator
 
 def main():
     try:
@@ -8,6 +9,7 @@ def main():
         fetcher = YouTubeCommentsFetcher()
         sentiment_analyzer = SentimentAnalyzer()
         lyrics_generator = LyricsGenerator()
+        audio_generator = AudioGenerator()
         
         # Get video ID from user input
         video_id = input("Enter YouTube video ID: ")
@@ -53,6 +55,13 @@ def main():
         print("=" * 50)
         print(lyrics)
         print("=" * 50)
+        
+        # Generate audio
+        print("\nGenerating audio...")
+        audio_file = audio_generator.generate_audio(lyrics)
+        if audio_file:
+            print(f"\nAudio file generated: {audio_file}")
+            print("You can play the audio file to hear the song!")
         
         print("\nComments with Sentiment:")
         for comment in analyzed_comments:
