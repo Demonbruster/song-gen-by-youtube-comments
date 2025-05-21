@@ -27,13 +27,24 @@ class YouTubeCommentsFetcher:
         response.raise_for_status()
         return response.json()
 
-    def get_comments(self, video_id: str, max_results: int = 100) -> List[Dict]:
-        """Fetch comments for a video."""
+    def get_comments(self, video_id: str, max_results: int = 100, order: str = 'relevance') -> List[Dict]:
+        """
+        Fetch comments for a video.
+        
+        Args:
+            video_id: The YouTube video ID
+            max_results: Maximum number of comments to fetch (default: 100)
+            order: Comment ordering ('relevance', 'time', 'rating') (default: 'relevance')
+            
+        Returns:
+            List of comment dictionaries
+        """
         url = f"{self.base_url}/commentThreads"
         params = {
             'part': 'snippet',
             'videoId': video_id,
             'maxResults': max_results,
+            'order': order,  # 'relevance' for popular/top comments
             'key': self.api_key
         }
         
