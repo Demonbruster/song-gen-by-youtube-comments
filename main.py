@@ -1,11 +1,13 @@
 from youtube_comments import YouTubeCommentsFetcher
 from sentiment_analyzer import SentimentAnalyzer
+from lyrics_generator import LyricsGenerator
 
 def main():
     try:
-        # Initialize the fetchers
+        # Initialize the services
         fetcher = YouTubeCommentsFetcher()
         sentiment_analyzer = SentimentAnalyzer()
+        lyrics_generator = LyricsGenerator()
         
         # Get video ID from user input
         video_id = input("Enter YouTube video ID: ")
@@ -34,13 +36,23 @@ def main():
         sentiment_counts, analyzed_comments = sentiment_analyzer.analyze_comments(comments)
         dominant_sentiment = sentiment_analyzer.get_dominant_sentiment(sentiment_counts)
         
-        # Display results
+        # Display sentiment results
         print("\nSentiment Analysis Results:")
         print(f"Positive comments: {sentiment_counts['positive']}")
         print(f"Neutral comments: {sentiment_counts['neutral']}")
         print(f"Negative comments: {sentiment_counts['negative']}")
         print(f"Mixed sentiment comments: {sentiment_counts['mixed']}")
         print(f"\nDominant sentiment: {dominant_sentiment.upper()}")
+        
+        # Generate lyrics
+        print("\nGenerating song lyrics...")
+        lyrics = lyrics_generator.generate_lyrics(analyzed_comments, sentiment_counts, dominant_sentiment)
+        
+        # Display results
+        print("\nGenerated Song Lyrics:")
+        print("=" * 50)
+        print(lyrics)
+        print("=" * 50)
         
         print("\nComments with Sentiment:")
         for comment in analyzed_comments:
