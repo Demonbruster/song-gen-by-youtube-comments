@@ -27,13 +27,13 @@ class LyricsGenerator:
 
     def _create_prompt(self, comments: List[Dict], sentiment_counts: Dict[str, int], dominant_sentiment: str) -> str:
         """Create a prompt for the lyrics generation based on comments and sentiment."""
-        # Extract some example comments for context
-        example_comments = [
+        # Extract all comments for context
+        all_comments = [
             f"- {comment['text']} ({comment['sentiment']})"
-            for comment in comments[:3]  # Use first 3 comments as examples
+            for comment in comments
         ]
         
-        prompt = f"""Based on the following YouTube comments and their sentiment analysis, write a song that captures the overall mood and themes.
+        prompt = f"""Based on the following YouTube comments and their sentiment analysis, write a song that incorporates the actual comments and captures the overall mood.
 
 Sentiment Analysis:
 - Positive comments: {sentiment_counts['positive']}
@@ -42,14 +42,19 @@ Sentiment Analysis:
 - Mixed sentiment comments: {sentiment_counts['mixed']}
 Dominant sentiment: {dominant_sentiment}
 
-Example comments:
-{chr(10).join(example_comments)}
+All Comments (use these exact phrases in your lyrics):
+{chr(10).join(all_comments)}
 
 Please write a song with:
-1. A catchy chorus that reflects the dominant sentiment
-2. At least two verses that incorporate themes from the comments
+1. A catchy chorus that reflects the dominant sentiment and uses actual phrases from the comments
+2. At least two verses that incorporate exact quotes from the comments
 3. A poetic style that matches the overall mood
 4. Clear separation between chorus and verses
+5. IMPORTANT: Use the exact phrases from the comments, but you can:
+   - Split them into different lines
+   - Repeat key phrases
+   - Combine parts of different comments
+   - Add connecting words to make it flow
 
 Format the output with clear section headers (CHORUS, VERSE 1, VERSE 2, etc.)."""
         
@@ -73,7 +78,7 @@ Format the output with clear section headers (CHORUS, VERSE 1, VERSE 2, etc.).""
             response = self.client.chat.completions.create(
                 model=self.model,  # or your specific model deployment name
                 messages=[
-                    {"role": "system", "content": "You are a creative songwriter who can write engaging lyrics based on social media comments and sentiment analysis."},
+                    {"role": "system", "content": "You are a creative songwriter who creates lyrics by incorporating actual social media comments. Your task is to use the exact phrases from the comments while maintaining a musical flow."},
                     {"role": "user", "content": prompt}
                 ],
                 temperature=self.temperature,
